@@ -17,7 +17,7 @@ $ pip install hashids
 #### Usage
 General:
 ```sh
-$ ./juice-cheater -u <urL> -<option>  
+$ ./juice-cheater -u [urL] -[option]  
 ```
 Where [url] is the address where the OWASP Juice Shop instance can be found and [option] is one of these choices:
   - check : run a test to see if the OWASP Juice Shop van be reached and the progress per challenge;
