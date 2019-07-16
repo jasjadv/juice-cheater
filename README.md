@@ -123,7 +123,18 @@ Summary: 0/86 challenges solved.
 ```
 Example to "solve" a specific challenge (in this case challenge number 10):
 ```sh
-$ ./juice-cheater -u http://127.0.0.1:3000/ -challenge 10
+$ ./juice-cheater http://127.0.0.1:3000/ -challenge 10
+
+OWASP Juice Shop cheater 0.1 PoC
+[OK] OWASP Juice Shop found at provided URL
+[OK] Challenges found: 86
+
+Trying to solve:
+Id          : 10
+Category    : Broken Access Control
+Name        : Forged Feedback
+Description : Post some feedback in another users name.
+Solved      : True
 ```
 Example to "solve" all challenges at once:
 ```sh
