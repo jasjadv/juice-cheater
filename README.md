@@ -32,6 +32,7 @@ $ ./juice-cheater http://127.0.0.1:3000/ -check
 OWASP Juice Shop cheater 0.1 PoC
 [OK] OWASP Juice Shop found at provided URL
 [OK] Challenges found: 86
+
 [UNSOLVED] Challenge 01 (Score Board)
 [UNSOLVED] Challenge 02 (Email Leak)
 [UNSOLVED] Challenge 03 (Error Handling)
