@@ -29,3 +29,7 @@ Example to check to see if things work correctly and/or the current progress:
 ```sh
 $ ./juice-cheater -u http://127.0.0.1:3000/ -check 
 ```
+Example to "solve" a specific challenge (in this case challenge number 10:
+```sh
+$ ./juice-cheater -u http://127.0.0.1:3000/ -challenge 10
+```
