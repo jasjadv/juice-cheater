@@ -6,3 +6,9 @@ OWASP Juice Shop is a very nice way to train security/hacking skills. However wh
 This fairly simple python program will show you how to abuse this feature of the juice-shop. 
 
 NOTE: Please only use this program on an instane of the OWASP Juice Shop you control yourself or has been setup for you alone. So don't be a jerk and use this on public instances of the OWASP Juice Shop.
+
+#### Get started
+Be sure to install hashids:
+```sh
+$ pip install hashids
+```
