@@ -6,7 +6,7 @@ OWASP Juice Shop is a very nice way to train security/hacking skills. However wh
 
 This python program will show you how to abuse the continue-code feature of the juice-shop. 
 
-NOTE: Please only use this program on an instane of the OWASP Juice Shop you control yourself or has been setup for you alone. So don't be a jerk and use this on public instances of the OWASP Juice Shop!
+NOTE: Please only use this program on an instance of the OWASP Juice Shop you control yourself or has been setup for you alone. So don't be a jerk and use this on public instances of the OWASP Juice Shop!
 
 # Usage
 #### Get started
