@@ -128,7 +128,8 @@ elif args.challenge is not None:
         print "Category    : " + getChallenge(args.challenge, "category", jData) 
         print "Name        : " + getChallenge(args.challenge, "name", jData)
         print "Description : " + getChallenge(args.challenge, "description", jData)
-               
+        
+        jData = solveThis(args.challenge, base_url + "/Api/Challenges")
         if str(getChallenge(args.challenge, "solved", jData)) == "True":
             print "Status      : {}".format(bcolors.OKGREEN + "Solved" + bcolors.ENDC)
         else:
