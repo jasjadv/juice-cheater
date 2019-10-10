@@ -63,7 +63,7 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 #============[MAIN SESSION]
-print "OWASP Juice Shop cheater 0.1 PoC"
+print "OWASP Juice Shop cheater 0.11 PoC"
 parser = argparse.ArgumentParser()
 parser.add_argument("url", help="the full url of the OWASP Juice Shop")
 parser.add_argument("-check", help="check the current progress", action="store_true")
